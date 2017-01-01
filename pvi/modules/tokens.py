@@ -20,6 +20,7 @@ tokens = (
         'LPAREN',
         'LT',
         'MINUS',
+        'MOD',
         'NUMBER',
         'PLUS',
         'POWER',
@@ -30,7 +31,8 @@ tokens = (
         'STRING',
         'TIMES',
         'TRUE',
-        'VAR')
+        'VAR',
+        'WHILE')
 
 states = (('comment','exclusive'),('linecomment','exclusive'))
 
@@ -61,118 +63,38 @@ def t_linecomment_error(token):
 t_comment_ignore = ''
 t_linecomment_ignore = ''
 
-
-def t_COMMA(token):
-    r','
-    return token
-
-def t_DIVIDE(token):
-    r'/'
-    return token
-
-def t_ELSE(token):
-    r'else'
-    return token
-
-def t_LOGICAL_EQUAL(token):
-    r'\=\='
-    return token
-
-def t_EQUAL(token):
-    r'\='
-    return token
-
-def t_FALSE(token):
-    r'false'
-    return token
-
-def t_FUNCTION(token):
-    r'function'
-    return token
-
-def t_GE(token):
-    r'>='
-    return token
-
-def t_GT(token):
-    r'>'
-    return token
-
-def t_IF(token):
-    r'if'
-    return token
-
-def t_LBRACE(token):
-    r'{'
-    return token
-
-def t_LE(token):
-    r'<='
-    return token
-
-def t_LOGICAL_AND(token):
-    r'&&'
-    return token
-
-def t_LOGICAL_OR(token):
-    r'\|\|'
-    return token
-
-
-def t_LOGICAL_NOT(token):
-    r'\!'
-    return token
-
-def t_LPAREN(token):
-    r"\("
-    return token
-
-def t_LT(token):
-    r'<'
-    return token
-
-def t_MINUS(token):
-    r'\-'
-    return token
-
-def t_PLUS(token):
-    r'\+'
-    return token
-
-def t_POWER(token):
-    r'\*\*'
-    return token
-
-def t_RBRACE(token):
-    r'}'
-    return token
-
-def t_RETURN(token):
-    r'return'
-    return token
-
-def t_RPAREN(token):
-    r"\)"
-    return token
-
-def t_SEMICOLON(token):
-    r';'
-    return token
-
-def t_TIMES(token):
-    r'\*'
-    return token
-
-def t_TRUE(token):
-    r'true'
-    return token
-
-def t_VAR(token):
-    r'var'
-    return token
+t_COMMA         = r','
+t_DIVIDE        = r'/'
+t_ELSE          = r'else'
+t_LOGICAL_EQUAL = r'\=\='
+t_EQUAL         = r'\='
+t_FALSE         = r'false'
+t_FUNCTION      = r'function'
+t_GE            = r'>='
+t_GT            = r'>'
+t_IF            = r'if'
+t_LBRACE        = r'{'
+t_LE            = r'<='
+t_LOGICAL_AND   = r'&&'
+t_LOGICAL_OR    = r'\|\|'
+t_LOGICAL_NOT   = r'\!'
+t_LPAREN        = r"\("
+t_LT            = r'<'
+t_MINUS         = r'\-'
+t_MOD           = r'\%'
+t_PLUS          = r'\+'
+t_POWER         = r'\*\*'
+t_RBRACE        = r'}'
+t_RETURN        = r'return'
+t_RPAREN        = r'\)'
+t_SEMICOLON     = r';'
+t_TIMES         = r'\*'
+t_TRUE          = r'true'
+t_VAR           = r'var'
+t_WHILE         = r'while'
 
 def t_STRING(token):
-    r'"(?:[\\\\\.]|[^\\])*"'
+    r'"(?:[^"\\]|(?:\\.))*"'
     token.value = token.value[1:-1]
     return token
 
@@ -181,7 +103,13 @@ def t_NUMBER(token):
     token.value = float(token.value)
     return token
 
-t_IDENTIFIER = r'[a-zA-Z]+[_a-zA-Z0-9]*'
+reserved = ['function', 'if', 'var', 'return', 'else', 'true', 'false', 'while']
+
+def t_IDENTIFIER(token):
+    r'[a-zA-Z]+[_a-zA-Z0-9]*'
+    if token.value in reserved:
+        token.type = token.value.upper()
+    return token
 
 
 t_ignore = ' \t\v\r'
