@@ -1,11 +1,15 @@
 import ply.lex as lex
 
 tokens = (
+        'BREAK',
         'COMMA',
+        'CONTINUE',
         'DIVIDE',
+        'DO',
         'ELSE',
         'EQUAL',
         'FALSE',
+        'FOR',
         'FUNCTION',
         'GE',
         'GT',
@@ -14,9 +18,10 @@ tokens = (
         'LBRACE',
         'LE',
         'LOGICAL_AND',
-        'LOGICAL_OR',
+        'LOGICAL_DIFF',
         'LOGICAL_EQUAL',
         'LOGICAL_NOT',
+        'LOGICAL_OR',
         'LPAREN',
         'LT',
         'MINUS',
@@ -63,35 +68,40 @@ def t_linecomment_error(token):
 t_comment_ignore = ''
 t_linecomment_ignore = ''
 
-t_COMMA         = r','
-t_DIVIDE        = r'/'
-t_ELSE          = r'else'
-t_LOGICAL_EQUAL = r'\=\='
-t_EQUAL         = r'\='
-t_FALSE         = r'false'
-t_FUNCTION      = r'function'
-t_GE            = r'>='
-t_GT            = r'>'
-t_IF            = r'if'
-t_LBRACE        = r'{'
-t_LE            = r'<='
-t_LOGICAL_AND   = r'&&'
-t_LOGICAL_OR    = r'\|\|'
-t_LOGICAL_NOT   = r'\!'
-t_LPAREN        = r"\("
-t_LT            = r'<'
-t_MINUS         = r'\-'
-t_MOD           = r'\%'
-t_PLUS          = r'\+'
-t_POWER         = r'\*\*'
-t_RBRACE        = r'}'
-t_RETURN        = r'return'
-t_RPAREN        = r'\)'
-t_SEMICOLON     = r';'
-t_TIMES         = r'\*'
-t_TRUE          = r'true'
-t_VAR           = r'var'
-t_WHILE         = r'while'
+t_BREAK                 = r'break'
+t_COMMA                 = r','
+t_CONTINUE              = r'continue'
+t_DIVIDE                = r'/'
+t_DO                    = r'do'
+t_ELSE                  = r'else'
+t_LOGICAL_EQUAL         = r'\=\='
+t_LOGICAL_DIFF          = r'\!\='
+t_EQUAL                 = r'\='
+t_FALSE                 = r'false'
+t_FOR                   = r'for'
+t_FUNCTION              = r'function'
+t_GE                    = r'>='
+t_GT                    = r'>'
+t_IF                    = r'if'
+t_LBRACE                = r'{'
+t_LE                    = r'<='
+t_LOGICAL_AND           = r'&&'
+t_LOGICAL_OR            = r'\|\|'
+t_LOGICAL_NOT           = r'\!'
+t_LPAREN                = r"\("
+t_LT                    = r'<'
+t_MINUS                 = r'\-'
+t_MOD                   = r'\%'
+t_PLUS                  = r'\+'
+t_POWER                 = r'\*\*'
+t_RBRACE                = r'}'
+t_RETURN                = r'return'
+t_RPAREN                = r'\)'
+t_SEMICOLON             = r';'
+t_TIMES                 = r'\*'
+t_TRUE                  = r'true'
+t_VAR                   = r'var'
+t_WHILE                 = r'while'
 
 def t_STRING(token):
     r'"(?:[^"\\]|(?:\\.))*"'
@@ -103,7 +113,7 @@ def t_NUMBER(token):
     token.value = float(token.value)
     return token
 
-reserved = ['function', 'if', 'var', 'return', 'else', 'true', 'false', 'while']
+reserved = ['break','continue', 'do', 'for', 'else', 'false', 'function', 'if', 'return', 'true', 'var', 'while']
 
 def t_IDENTIFIER(token):
     r'[a-zA-Z]+[_a-zA-Z0-9]*'

@@ -4,7 +4,7 @@ The first interpreter is being written in Python.
 
 The language has C-like syntax and currently contains the following:
 
-version 0.1:
+VERSION 0.1:
 - var declarations (no type declarations)
 - function declarations
 - if/else statements
@@ -15,9 +15,12 @@ version 0.1:
 - Math operations: +, -, /, \*(multiplication), **(power), %(mod)
 - strings
 
-to-do:
+VERSION 0.2:
 - for and do-while loops
 - != for logical difference
+- continue and break statements for loops
+
+to-do:
 - lists
 - tuples
 - map, filter, reduce

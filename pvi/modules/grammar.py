@@ -53,6 +53,7 @@ def p_stmt_or_compound_c(p):
     'stmt_or_compound : compoundstmt'
     p[0] = p[1]
 
+
 def p_optsemi_none(p):
     'optsemi : '
     p[0] = p[0]
@@ -66,13 +67,25 @@ def p_stmts_empty(p):
     p[0] = []
 
 
+def p_sstmt_break(p):
+    'sstmt : BREAK'
+    p[0] = ("break",)
+
+def p_sstmt_continue(p):
+    'sstmt : CONTINUE'
+    p[0] = ("continue",)
+
 def p_sstmt_if(p):
     'sstmt : IF exp stmt_or_compound optsemi %prec LOWER_THAN_ELSE'
     p[0] = ("if-then",p[2],p[3])
 
 def p_sstmt_while(p):
-    'sstmt : WHILE exp compoundstmt optsemi'
+    'sstmt : WHILE exp stmt_or_compound optsemi'
     p[0] = ("while", p[2], p[3])
+
+def p_sstmt_do_while(p):
+    'sstmt : DO compoundstmt WHILE exp optsemi'
+    p[0] = ("do-while", p[2],p[4])
 
 def p_sstmt_if_else(p):
     'sstmt : IF exp compoundstmt ELSE stmt_or_compound optsemi'
@@ -94,13 +107,37 @@ def p_sstmt_exp(p):
     'sstmt : exp optsemi'
     p[0] = ("exp", p[1])
 
+def p_assign_or_var(p):
+    'assign_or_var : IDENTIFIER EQUAL exp'
+    p[0] = ("assign", p[1], p[3])
+
+def p_assign_or_var_v(p):
+    'assign_or_var : VAR IDENTIFIER EQUAL exp'
+    p[0] = ("var",p[2],p[4])
+
+def p_assign_or_stmt(p):
+    'assign_or_var_stmt : sstmt'
+    p[0] = p[1]
+
+def p_assign_or_stmt_a(p):
+    'assign_or_stmt : IDENTIFIER EQUAL exp'
+    p[0] = ("assign", p[1], p[3])
+
+def p_assign_or_var_empty(p):
+    'assign_or_var : '
+    p[0] = []
+
+def p_sstmt_for(p):
+    'sstmt : FOR LPAREN assign_or_var SEMICOLON exp SEMICOLON assign_or_stmt RPAREN stmt_or_compound optsemi'
+    p[0] = ("for", p[3], p[5], p[7], p[9])
+
 ###############
 # expressions #
 ###############
 precedence = (
         ('left','LOGICAL_OR'),        
         ('left','LOGICAL_AND'),        
-        ('left','LOGICAL_EQUAL'),        
+        ('left','LOGICAL_EQUAL','LOGICAL_DIFF'),        
         ('left','LE','LT','GE','GT'),        
         ('left','PLUS','MINUS'),        
         ('left','TIMES','DIVIDE','MOD'),
@@ -146,6 +183,7 @@ def p_exp_binop(p):
     '''exp : exp LOGICAL_OR exp
            | exp LOGICAL_AND exp
            | exp LOGICAL_EQUAL exp
+           | exp LOGICAL_DIFF exp
            | exp LT exp
            | exp GT exp
            | exp LE exp
@@ -157,6 +195,7 @@ def p_exp_binop(p):
            | exp POWER exp
            | exp MOD exp'''
     p[0] = ('binop', p[1], p[2], p[3])
+
 
 def p_exp_call(p):
     'exp : IDENTIFIER LPAREN optargs RPAREN'

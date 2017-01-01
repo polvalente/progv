@@ -8,7 +8,7 @@ from sys import argv
 lexer = lex.lex(module=tokens)
 parser = yacc.yacc(module=grammar,tabmodule="progv_parsetab")
 if len(argv) > 1:
-    ast = parser.parse(''.join(open(argv[1],'r').readlines()), lexer=lexer)
+    ast = parser.parse((''.join(open(argv[1],'r').readlines())).lower(), lexer=lexer)
     interpreter.interpret(ast) 
 else:
     print 'No input file'

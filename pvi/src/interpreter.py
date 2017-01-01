@@ -51,7 +51,10 @@ def eval_element(element, env):
         print "ERROR: eval_element: unknown element "+element
 
 def eval_stmts(stmts, env):
-    map(lambda s: eval_stmt(s, env), stmts)
+    for stmt in stmts:
+        val = eval_stmt(stmt, env)
+        if val in ["break","continue"]:
+            return val
 
 def eval_stmt(stmt, env):
     stype = stmt[0]
@@ -59,19 +62,48 @@ def eval_stmt(stmt, env):
         conditional = stmt[1]
         then = stmt[2]
         if eval_exp(conditional, env):
-            eval_stmts(then, env)
+            return eval_stmts(then, env)
+    elif stype == "break": return "break"
+    elif stype == "continue": return "continue" 
     elif stype == "while":
         conditional = stmt[1]
         body = stmt[2]
-        while eval_exp(conditional,env): eval_stmts(body,env)
+        while eval_exp(conditional,env): 
+            val = eval_stmts(body,env)
+            if val == "break": break
+            elif val == "continue": continue
+
+    elif stype == "for":
+        setup = stmt[1]
+        conditional = stmt[2]
+        post_loop = stmt[3]
+        body = stmt[4]
+
+        eval_stmt(setup,env)
+        while (True):
+            val = eval_stmts(body,env)
+            if val == "break": break
+            elif val == "continue": continue
+            if not eval_exp(conditional, env): break
+            eval_stmt(post_loop,env)
+    elif stype == "do-while":
+        body = stmt[1]
+        conditional = stmt[2]
+        while True:
+            val = eval_stmts(body,env)
+            if val == "break": break
+            elif val == "continue": continue
+            if not eval_exp(conditional, env): break
+
     elif stype == "if-then-else":
         conditional = stmt[1]
         then_branch = stmt[2]
         else_branch = stmt[3]
         if eval_exp(conditional,env):
-            eval_stmts(then_branch,env)
+            val = eval_stmts(then_branch,env)
         else:
-            eval_stmts(else_branch,env)
+            val = eval_stmts(else_branch,env)
+        return val
     elif stype == "var":
         name = stmt[1]
         right_exp = stmt[2]
@@ -87,6 +119,7 @@ def eval_stmt(stmt, env):
         eval_exp(stmt[1],env)
     else:
         print "ERROR: unknown statement type ", stype
+    return None
 
 def eval_exp(exp, env):
     etype = exp[0]
@@ -127,6 +160,7 @@ def eval_exp(exp, env):
         elif op == ">": return a > b
         elif op == "&&": return a and b
         elif op == "||": return a or b
+        elif op == "!=": return not(a == b)
         else:
             print "ERROR: unknown binary operation ", op
             exit(1)
