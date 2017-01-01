@@ -9,13 +9,16 @@ tokens = (
         'ELSE',
         'EQUAL',
         'FALSE',
+        'FLOAT',
         'FOR',
         'FUNCTION',
         'GE',
         'GT',
         'IDENTIFIER',
         'IF',
+        'INT',
         'LBRACE',
+        'LBRACKET',
         'LE',
         'LOGICAL_AND',
         'LOGICAL_DIFF',
@@ -26,10 +29,10 @@ tokens = (
         'LT',
         'MINUS',
         'MOD',
-        'NUMBER',
         'PLUS',
         'POWER',
         'RBRACE',
+        'RBRACKET',
         'RETURN',
         'RPAREN',
         'SEMICOLON',
@@ -83,6 +86,7 @@ t_FUNCTION              = r'function'
 t_GE                    = r'>='
 t_GT                    = r'>'
 t_IF                    = r'if'
+t_LBRACKET              = r'\['
 t_LBRACE                = r'{'
 t_LE                    = r'<='
 t_LOGICAL_AND           = r'&&'
@@ -95,6 +99,7 @@ t_MOD                   = r'\%'
 t_PLUS                  = r'\+'
 t_POWER                 = r'\*\*'
 t_RBRACE                = r'}'
+t_RBRACKET              = r'\]'
 t_RETURN                = r'return'
 t_RPAREN                = r'\)'
 t_SEMICOLON             = r';'
@@ -108,9 +113,14 @@ def t_STRING(token):
     token.value = token.value[1:-1]
     return token
 
-def t_NUMBER(token):
-    r'-?[0-9]+\.?[0-9]*'
+def t_FLOAT(token):
+    r'-?[0-9]+\.[0-9]*'
     token.value = float(token.value)
+    return token
+
+def t_INT(token):
+    r'-?[0-9]+'
+    token.value = int(token.value)
     return token
 
 reserved = ['break','continue', 'do', 'for', 'else', 'false', 'function', 'if', 'return', 'true', 'var', 'while']

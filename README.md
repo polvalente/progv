@@ -20,8 +20,11 @@ VERSION 0.2:
 - != for logical difference
 - continue and break statements for loops
 
+VERSION 0.3:
+- lists (implemented but not really tested)
+- changed number type to float and int types
+
 to-do:
-- lists
 - tuples
 - map, filter, reduce
 - classes

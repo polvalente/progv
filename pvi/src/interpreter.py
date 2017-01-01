@@ -131,7 +131,9 @@ def eval_exp(exp, env):
             print "ERROR: unbound variable " + name
         else:
             return value
-    elif etype == "number":
+    elif etype == "int":
+        return int(exp[1])
+    elif etype == "float":
         return float(exp[1])
     elif etype == "string":
         return exp[1]
@@ -191,6 +193,28 @@ def eval_exp(exp, env):
                     return r.value
         else:
             print "ERROR: call to non-function " + name
+    elif etype == "list":
+        list_elements = exp[1]
+        val = []
+        for e in list_elements:
+            val.append(eval_exp(e,env))
+        return val
+    elif etype == "index_list":
+        list_id = exp[1]
+        index_exp = exp[2]
+        index = eval_exp(index_exp, env)
+        if int(index) != float(index):
+            print 'WARNING: Indices must be integer numbers. Will round to nearest integer'
+        list_var = env_search(list_id,env)
+        return list_var[int(index)]
+    elif etype == "index_list_lvalue":
+        list_elements = exp[1]
+        index = exp[2]
+        index = eval_exp(index, env)
+        list_val = []
+        for e in list_elements:
+            list_val.append(eval_exp(e, env))
+        return list_val[index] 
     else:
         print "ERROR: uknown expression type ", etype
     return None

@@ -116,7 +116,7 @@ def p_assign_or_var_v(p):
     p[0] = ("var",p[2],p[4])
 
 def p_assign_or_stmt(p):
-    'assign_or_var_stmt : sstmt'
+    'assign_or_stmt : sstmt'
     p[0] = p[1]
 
 def p_assign_or_stmt_a(p):
@@ -151,9 +151,13 @@ def p_exp_identifier(p):
     'exp : IDENTIFIER'
     p[0] = ("identifier", p[1])
 
-def p_exp_number(p):
-    'exp : NUMBER'
-    p[0] = ('number', p[1])
+def p_exp_float(p):
+    'exp : FLOAT'
+    p[0] = ('float', p[1])
+
+def p_exp_int(p):
+    'exp : INT'
+    p[0] = ('int', p[1])
 
 def p_exp_string(p):
     'exp : STRING'
@@ -216,3 +220,15 @@ def p_args(p):
 def p_args_one(p):
     'args : exp'
     p[0] = [p[1]]
+
+def p_exp_list(p):
+    'exp : LBRACKET optargs RBRACKET'
+    p[0] = ("list", p[2])
+
+def p_exp_list_index(p):
+    'exp : IDENTIFIER LBRACKET exp RBRACKET'
+    p[0] = ("index_list", p[1], p[3])
+
+def p_exp_list_index_lv(p):
+    'exp : LBRACKET optargs RBRACKET LBRACKET exp RBRACKET'
+    p[0] = ("index_list_lvalue",p[2],p[5])
