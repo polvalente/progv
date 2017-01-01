@@ -28,3 +28,10 @@ to-do:
 - tuples
 - map, filter, reduce
 - classes
+
+
+Running the interpreter:
+
+- Clone the repo
+- go to the root dir, which contains directories 'pvi' and 'tests'
+- run 'python -m pvi <filename>' to run the code contained in the file you want to run
