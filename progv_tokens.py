@@ -193,29 +193,3 @@ def t_newline(token):
 def t_error(token):
     print 'PROGV Lexer: Illegal Character ' + token.value
     token.lexer.skip(1)
-
-lexer = lex.lex()
-
-def process_lexer(input_string):
-    lexer.input(input_string)
-    result = []
-    while True:
-        tok = lexer.token()
-        if not tok: break
-        result.append(tok.type)
-    return result
-
-
-input1 = """ - !  && ( ) * , / ; { || } + < <= = == > >= else false function if return true var """
-
-output1 = ['MINUS', 'LOGICAL_NOT', 'LOGICAL_AND', 'LPAREN', 'RPAREN', 'TIMES', 'COMMA', 'DIVIDE', 'SEMICOLON', 'LBRACE', 'LOGICAL_OR', 'RBRACE', 'PLUS', 'LT', 'LE', 'EQUAL', 'LOGICAL_EQUAL', 'GT', 'GE', 'ELSE', 'FALSE', 'FUNCTION', 'IF', 'RETURN', 'TRUE', 'VAR']  
-print input1
-print process_lexer(input1)
-print process_lexer(input1) == output1  
-
-input2 = """ if // else mystery
-             =/*=*/= true /* false */ return"""  
-
-output2 = ['IF', 'EQUAL', 'EQUAL', 'TRUE', 'RETURN']  
-print process_lexer(input2)
-print process_lexer(input2) == output2
